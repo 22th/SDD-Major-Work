@@ -30,4 +30,11 @@ while running == True:
     for event in events:
         if event.type == py.QUIT: 
             running=False
+            
+            
+    #txtbx.update(events)
+    #blit txtbx on the sceen
+    #txtbx.set_pos(100,10)
+    #txtbx.draw(screen)
     
+    py.display.flip()
