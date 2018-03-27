@@ -11,7 +11,7 @@ lock = py.time.Clock()
 myfont = py.font.SysFont("Comic Sans MS",15)
 running=True 
 gate=gates.LogicGates()
-txtbx = eztext.Input(maxlength=45, color=(255,255,255), prompt='type here: ')
+txtbx = eztext.Input(maxlength=45, color=(255,255,255), prompt='Name: ')
 startbutt=py.image.load("startbutton.png")
 start=0
 #vars above
