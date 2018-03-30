@@ -16,15 +16,24 @@ startbutt=py.image.load("startbutton.png")
 start=0
 SL=0
 py.display.set_caption("Logic Puzzler")
-#vars above    
+black=(0,0,0)
+white=(255,255,255)
+#vars above  
+def rectbutton(screen,x,y,w,h,color):
+    py.draw.rect(screen,color,(x,y,w,h))
+    butt=py.Rect(x,y,w,h)
+    ev = py.event.get()
+    for ev in events:
+        if event.type == py.MOUSEBUTTONUP:
+            if butt.collidepoint((py.mouse.get_pos())):
+                return(True)
 def imgbutton(screen,img,x,y,):
     screen.blit(img,(x,y))
     butt=py.Rect(x,y,img.get_width(),img.get_height())
     ev = py.event.get()
     for ev in events:
         if event.type == py.MOUSEBUTTONDOWN: 
-            mousepos=py.mouse.get_pos()
-            if butt.collidepoint((mousepos)):
+            if butt.collidepoint((py.mouse.get_pos())):
                 return(1)
 def Selectlevel():
     lock.tick(10)
@@ -33,9 +42,15 @@ def Selectlevel():
         if event.type == py.QUIT: 
             running=False
             py.display.quit()
-    print("y")
-    screen.fill((59,50,255))
+    screen.fill((50,50,50))
+    for i in range(15):
+        if i < 5:
+            click=rectbutton(screen,200+160*i,200,50,50,black)
+            if click == True:
+                return(i)
+    
     py.display.flip()
+    return(16)
 def gamescreen(levelnum):
     lock.tick(10)
     events = py.event.get()
@@ -43,10 +58,11 @@ def gamescreen(levelnum):
         if event.type == py.QUIT: 
             running=False
     print("y")
-    screen.fill((50,50,50))
+    screen.fill((50,50,255))
     py.display.flip()
 def main():
     select=False
+    levnum=16
     screen.fill((50,50,50))
     start=imgbutton(screen,startbutt,350,100)
     print(start)
@@ -60,8 +76,10 @@ def main():
         for event in py.event.get():
             if event.type == py.QUIT: 
                 running=False
-        
-        Selectlevel()
+        print(levnum)
+        levnum=Selectlevel()
+        while levnum != 16:
+            gamescreen(levnum)
     py.display.flip()
 while running:
     lock.tick(10)
