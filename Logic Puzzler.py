@@ -15,32 +15,26 @@ txtbx = eztext.Input(maxlength=45, color=(255,255,255), prompt='Name: ')
 startbutt=py.image.load("startbutton.png")
 start=0
 SL=0
-#vars above
-def clckquit():
-    lock.tick(100)
-    even = py.event.get()
-    for event in even:
-        if event.type == py.QUIT: 
-            running=False
-    
+py.display.set_caption("Logic Puzzler")
+#vars above    
 def imgbutton(screen,img,x,y,):
     screen.blit(img,(x,y))
-    imgw=img.get_width()
-    imgh=img.get_height()
+    butt=py.Rect(x,y,img.get_width(),img.get_height())
     ev = py.event.get()
     for ev in events:
-        if ev.type == py.MOUSEBUTTONDOWN: 
+        if event.type == py.MOUSEBUTTONDOWN: 
             mousepos=py.mouse.get_pos()
-            if x+imgw > mousepos[0] > x and y+imgh > mousepos[1] > y:
+            if butt.collidepoint((mousepos)):
                 return(1)
 def Selectlevel():
     lock.tick(10)
-    evets = py.event.get()
-    for event in evets:
+    global events
+    for event in events:
         if event.type == py.QUIT: 
             running=False
-
-    screen.fill((50,50,50))
+            py.display.quit()
+    print("y")
+    screen.fill((59,50,255))
     py.display.flip()
 def gamescreen(levelnum):
     lock.tick(10)
@@ -48,35 +42,31 @@ def gamescreen(levelnum):
     for event in events:
         if event.type == py.QUIT: 
             running=False
-
+    print("y")
     screen.fill((50,50,50))
     py.display.flip()
 def main():
-    i=0
-    if i == 0:
-        S=0
+    select=False
     screen.fill((50,50,50))
     start=imgbutton(screen,startbutt,350,100)
     print(start)
     if start == 1:
-        S=1
+        select=True
     #txtbx.update()
     #blit txtbx on the sceen
     #txtbx.set_pos(100,10)
     #txtbx.draw(screen)
-    while S == 1:
-        events = py.event.get()
-        for event in events:
+    while select:
+        for event in py.event.get():
             if event.type == py.QUIT: 
                 running=False
         
         Selectlevel()
     py.display.flip()
-while running == True: 
+while running:
     lock.tick(10)
-    events = py.event.get()
+    events=py.event.get()
     for event in events:
         if event.type == py.QUIT: 
             running=False
-
     main()
