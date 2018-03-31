@@ -50,7 +50,6 @@ def Selectlevel():
         if i < 5:
             click=rectbutton(screen,200+160*i,200,50,50,black)
             if click == True:
-                #print("hey ahole")
                 return(i)
     
     py.display.flip()
