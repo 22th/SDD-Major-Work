@@ -21,32 +21,36 @@ white=(255,255,255)
 #vars above  
 def rectbutton(screen,x,y,w,h,color):
     py.draw.rect(screen,color,(x,y,w,h))
-    butt=py.Rect(x,y,w,h)
-    ev = py.event.get()
-    for ev in events:
+    butot=py.Rect(x,y,w,h)
+    global even
+    for event in even:
         if event.type == py.MOUSEBUTTONUP:
-            if butt.collidepoint((py.mouse.get_pos())):
+            if butot.collidepoint((py.mouse.get_pos())):
                 return(True)
+    
 def imgbutton(screen,img,x,y,):
     screen.blit(img,(x,y))
     butt=py.Rect(x,y,img.get_width(),img.get_height())
-    ev = py.event.get()
-    for ev in events:
-        if event.type == py.MOUSEBUTTONDOWN: 
+    eve = py.event.get()
+    for eve in events:
+        if event.type == py.MOUSEBUTTONUP: 
             if butt.collidepoint((py.mouse.get_pos())):
                 return(1)
 def Selectlevel():
     lock.tick(10)
-    global events
+    #global events
     for event in events:
         if event.type == py.QUIT: 
             running=False
             py.display.quit()
     screen.fill((50,50,50))
-    for i in range(15):
+    for i in range(5):
+        even=py.event.get(py.MOUSEBUTTONUP)
+        global even                
         if i < 5:
             click=rectbutton(screen,200+160*i,200,50,50,black)
             if click == True:
+                #print("hey ahole")
                 return(i)
     
     py.display.flip()
@@ -76,10 +80,11 @@ def main():
         for event in py.event.get():
             if event.type == py.QUIT: 
                 running=False
-        print(levnum)
+                
         levnum=Selectlevel()
-        while levnum != 16:
-            gamescreen(levnum)
+        print(levnum)
+    while levnum != 16:
+        gamescreen(levnum)
     py.display.flip()
 while running:
     lock.tick(10)
