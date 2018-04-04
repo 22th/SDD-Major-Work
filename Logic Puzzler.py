@@ -16,42 +16,42 @@ startbutt=py.image.load("startbutton.png")
 start=0
 SL=0
 py.display.set_caption("Logic Puzzler")
-black=(0,0,0)
-white=(255,255,255)
+RED = (255,0,0)
+BLUE = (0,0,255)
+GREEN = (0,255,0)
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+ORANGE = (255,180,0)                
 #vars above  
-def rectbutton(screen,x,y,w,h,color):
+def rectbutton(screen,x,y,w,h,color,events):
     py.draw.rect(screen,color,(x,y,w,h))
-    butot=py.Rect(x,y,w,h)
-    global even
-    for event in even:
-        if event.type == py.MOUSEBUTTONUP:
-            if butot.collidepoint((py.mouse.get_pos())):
-                return(True)
-    
-def imgbutton(screen,img,x,y,):
+    name=py.Rect(x,y,w,h)
+    for evet in events:
+        if evet.type == py.MOUSEBUTTONUP:
+            if name.collidepoint((py.mouse.get_pos())):
+                return(True)   
+def imgbutton(screen,img,x,y,events):
     screen.blit(img,(x,y))
     butt=py.Rect(x,y,img.get_width(),img.get_height())
-    eve = py.event.get()
-    for eve in events:
+    for event in events:
         if event.type == py.MOUSEBUTTONUP: 
             if butt.collidepoint((py.mouse.get_pos())):
-                return(1)
+                return(True)
+            
 def Selectlevel():
     lock.tick(10)
-    #global events
+    events=py.event.get()
     for event in events:
         if event.type == py.QUIT: 
             running=False
             py.display.quit()
     screen.fill((50,50,50))
-    for i in range(5):
-        even=py.event.get(py.MOUSEBUTTONUP)
-        global even                
+    i=0
+    for i in range(5):              
         if i < 5:
-            click=rectbutton(screen,200+160*i,200,50,50,black)
+            click=rectbutton(screen,200+160*i,200,50,50,BLACK,events)
             if click == True:
-                return(i)
-    
+                 return(i)
     py.display.flip()
     return(16)
 def gamescreen(levelnum):
@@ -64,12 +64,17 @@ def gamescreen(levelnum):
     screen.fill((50,50,255))
     py.display.flip()
 def main():
+    events=py.event.get()
+    for event in events:
+        if event.type == py.QUIT: 
+            running=False
+    
     select=False
+    lvnum=False
     levnum=16
     screen.fill((50,50,50))
-    start=imgbutton(screen,startbutt,350,100)
-    print(start)
-    if start == 1:
+    start=imgbutton(screen,startbutt,350,100,events)
+    if start == True:
         select=True
     #txtbx.update()
     #blit txtbx on the sceen
@@ -81,13 +86,15 @@ def main():
                 running=False
                 
         levnum=Selectlevel()
-        print(levnum)
-    while levnum != 16:
+    if levnum != 16:
+        lvnum = True
+        print("test")
+    while lvnum:
         gamescreen(levnum)
     py.display.flip()
 while running:
-    lock.tick(10)
-    events=py.event.get()
+    lock.tick(100)
+    events=py.event.get(py.QUIT)
     for event in events:
         if event.type == py.QUIT: 
             running=False
