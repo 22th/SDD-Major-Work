@@ -46,12 +46,11 @@ def Selectlevel():
             running=False
             py.display.quit()
     screen.fill((50,50,50))
-    i=0
-    for i in range(5):              
-        if i < 5:
-            click=rectbutton(screen,200+160*i,200,50,50,BLACK,events)
+    for j in range(3):
+        for i in range(5):              
+            click=rectbutton(screen,200+160*i,300+100*j,50,50,BLACK,events)
             if click == True:
-                 return(i)
+                return(i)            
     py.display.flip()
     return(16)
 def gamescreen(levelnum):
@@ -80,7 +79,7 @@ def main():
     #blit txtbx on the sceen
     #txtbx.set_pos(100,10)
     #txtbx.draw(screen)
-    while select:
+    while select and levnum == 16:
         for event in py.event.get():
             if event.type == py.QUIT: 
                 running=False
