@@ -9,8 +9,8 @@ screen_height = 700
 screen = py.display.set_mode((screen_width,screen_height))
 lock = py.time.Clock()
 myfont = py.font.SysFont("Comic Sans MS",11)
+yfont = py.font.SysFont("Comic Sans MS",20)
 running=True 
-gate=gates.LogicGates()
 txtbx = eztext.Input(maxlength=45, color=(255,255,255), prompt='Name: ')
 startbutt=py.image.load("startbutton.png")
 start=0
@@ -23,13 +23,24 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 ORANGE = (255,180,0)                
 #vars above  
-def rectbutton(screen,x,y,w,h,color,events,text,font,fcolor):
+def screenMsg(screen,x,y,font,text,color):
+    xv=font.render(text,1,color)
+    screen.blit(xv,(x,y))
+def toggleRectButton(screen,x,y,w,h,color,events,text,font,fcolor):
     xv=font.render(text,1,fcolor)
-    fwidth=py.Surface.get_width(xv)
-    fheight=py.Surface.get_height(xv)
     py.draw.rect(screen,color,(x,y,w,h))
     name=py.Rect(x,y,w,h)
-    screen.blit(xv,(x+w/2-fwidth/2,y+h/2-fheight/2))    
+    screen.blit(xv,(x+w/2-py.Surface.get_width(xv)/2,y+h/2-py.Surface.get_height(xv)/2))    
+    for evet in events:
+        if evet.type == py.MOUSEBUTTONUP:
+            if name.collidepoint((py.mouse.get_pos())):
+                return(True)   
+    
+def rectbutton(screen,x,y,w,h,color,events,text,font,fcolor):
+    xv=font.render(text,1,fcolor)
+    py.draw.rect(screen,color,(x,y,w,h))
+    name=py.Rect(x,y,w,h)
+    screen.blit(xv,(x+w/2-py.Surface.get_width(xv)/2,y+h/2-py.Surface.get_height(xv)/2))    
     for evet in events:
         if evet.type == py.MOUSEBUTTONUP:
             if name.collidepoint((py.mouse.get_pos())):
@@ -50,6 +61,7 @@ def Selectlevel():
             running=False
             py.display.quit()
     screen.fill((50,50,50))
+    tut=rectbutton(screen,100,100,75,75,BLACK,events,"TUTORIAL",myfont,WHITE)
     cou=0
     for j in range(3):
         for i in range(5):  
@@ -59,13 +71,28 @@ def Selectlevel():
                 return(cou)            
     py.display.flip()
     return(16)
-def gamescreen(levelnum):
+def TutorialScreen():
     lock.tick(10)
+    events=py.event.get()
+    for event in events:
+        if event.type == py.QUIT: 
+            running=False
+            py.display.quit()
+    screen.fill((50,50,50))
+    
+def gamescreen(levelnum):
+    lock.tick(100)
     events = py.event.get()
     for event in events:
         if event.type == py.QUIT: 
             running=False
     screen.fill((50,50,50))
+    LevDeets=[]
+    levfile="Levels/" +str(levelnum) +".txt"
+    for i in open(str(levfile),"r"):
+        LevDeets.append(i.strip())
+    
+    screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     py.display.flip()
 def main():
     events=py.event.get()
