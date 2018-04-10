@@ -2,6 +2,7 @@ import pygame as py
 import random as rand
 import gates
 import eztext
+import ast
 py.init()
 #vars below
 screen_width = 1000
@@ -61,7 +62,6 @@ def Selectlevel():
             running=False
             py.display.quit()
     screen.fill((50,50,50))
-    tut=rectbutton(screen,100,100,75,75,BLACK,events,"TUTORIAL",myfont,WHITE)
     cou=0
     for j in range(3):
         for i in range(5):  
@@ -71,14 +71,6 @@ def Selectlevel():
                 return(cou)            
     py.display.flip()
     return(16)
-def TutorialScreen():
-    lock.tick(10)
-    events=py.event.get()
-    for event in events:
-        if event.type == py.QUIT: 
-            running=False
-            py.display.quit()
-    screen.fill((50,50,50))
     
 def gamescreen(levelnum):
     lock.tick(100)
@@ -87,11 +79,17 @@ def gamescreen(levelnum):
         if event.type == py.QUIT: 
             running=False
     screen.fill((50,50,50))
-    LevDeets=[]
-    levfile="Levels/" +str(levelnum) +".txt"
-    for i in open(str(levfile),"r"):
-        LevDeets.append(i.strip())
-    
+    LevFilesLoc="Levels/"+str(levelnum)+"/"
+    LevImages=[]
+    for i in range(25):
+        img=py.image.load(LevFilesLoc +str(i+1) +".jpg")
+        img=py.transform.scale(img,(50,50))
+        LevImages.append(img)
+    cou=0
+    for j in range(5):
+        for i in range(5):
+            screen.blit(LevImages[cou],(51*i,51*j))
+            cou+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     py.display.flip()
 def main():

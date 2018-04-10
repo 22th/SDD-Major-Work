@@ -210,7 +210,7 @@ def enumeratePins(gate):
     for pins in cross([0, 1], gate.nInputs):
         for pin, val in enumerate(pins):
             gate.setIn(pin, val)
-        print gate
+        print(gate)
 
 class Fan(Gate):
     """ Copies a single input to multiple outputs. """
