@@ -66,7 +66,7 @@ def Selectlevel():
     for j in range(3):
         for i in range(5):  
             cou=cou+1
-            click=rectbutton(screen,200+160*i,300+100*j,50,50,BLACK,events,str(cou),myfont,WHITE)
+            click=rectbutton(screen,175+160*i,300+100*j,50,50,BLACK,events,str(cou),myfont,WHITE)
             if click == True:
                 return(cou)            
     py.display.flip()
@@ -117,7 +117,6 @@ def main():
         levnum=Selectlevel()
     if levnum != 16:
         lvnum = True
-        print("test")
     while lvnum:
         gamescreen(levnum)
     py.display.flip()
