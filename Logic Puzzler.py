@@ -2,7 +2,6 @@ import pygame as py
 import random as rand
 import gates
 import eztext
-import ast
 py.init()
 #vars below
 screen_width = 1000
@@ -26,17 +25,7 @@ ORANGE = (255,180,0)
 #vars above  
 def screenMsg(screen,x,y,font,text,color):
     xv=font.render(text,1,color)
-    screen.blit(xv,(x,y))
-def toggleRectButton(screen,x,y,w,h,color,events,text,font,fcolor):
-    xv=font.render(text,1,fcolor)
-    py.draw.rect(screen,color,(x,y,w,h))
-    name=py.Rect(x,y,w,h)
-    screen.blit(xv,(x+w/2-py.Surface.get_width(xv)/2,y+h/2-py.Surface.get_height(xv)/2))    
-    for evet in events:
-        if evet.type == py.MOUSEBUTTONUP:
-            if name.collidepoint((py.mouse.get_pos())):
-                return(True)   
-    
+    screen.blit(xv,(x,y))    
 def rectbutton(screen,x,y,w,h,color,events,text,font,fcolor):
     xv=font.render(text,1,fcolor)
     py.draw.rect(screen,color,(x,y,w,h))
@@ -80,15 +69,33 @@ def gamescreen(levelnum):
             running=False
     screen.fill((50,50,50))
     LevFilesLoc="Levels/"+str(levelnum)+"/"
-    LevImages=[]
+    zxcvbn=0
+    LevImagesPlay=[]
     for i in range(25):
         img=py.image.load(LevFilesLoc +str(i+1) +".jpg")
         img=py.transform.scale(img,(50,50))
-        LevImages.append(img)
+        LevImagesPlay.append(img)
+    
+    LevImagesRes=[]
+    for i in range(25):
+        img=py.image.load(LevFilesLoc +str(i+1) +".jpg")
+        img=py.transform.scale(img,(50,50))
+        LevImagesRes.append(img)
+    Toggled=[]
+    for i in range(len(LevImagesPlay)):
+        Toggled.append(False)
     cou=0
     for j in range(5):
         for i in range(5):
-            screen.blit(LevImages[cou],(51*i,51*j))
+            toggle=imgbutton(screen,LevImagesPlay[cou],400+50*i,440+51*j,events)
+            if toggle == True:
+                Toggled=not Toggled
+                print(Toggled)
+            cou+=1
+    cou=0
+    for j in range(5):
+        for i in range(5):
+            screen.blit(LevImagesRes[cou],(51*i,440+51*j))
             cou+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     py.display.flip()
