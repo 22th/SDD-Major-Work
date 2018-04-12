@@ -4,6 +4,11 @@ import gates
 import eztext
 py.init()
 #vars below
+class Images:
+    image=[]
+    x=0
+    y=0
+    img_count=0
 screen_width = 1000
 screen_height = 700
 screen = py.display.set_mode((screen_width,screen_height))
@@ -61,7 +66,7 @@ def Selectlevel():
     py.display.flip()
     return(16)
     
-def gamescreen(levelnum):
+def gamescreen(levelnum,LevImageRes):
     lock.tick(100)
     events = py.event.get()
     for event in events:
@@ -75,27 +80,20 @@ def gamescreen(levelnum):
         img=py.image.load(LevFilesLoc +str(i+1) +".jpg")
         img=py.transform.scale(img,(50,50))
         LevImagesPlay.append(img)
-    
-    LevImagesRes=[]
-    for i in range(25):
-        img=py.image.load(LevFilesLoc +str(i+1) +".jpg")
-        img=py.transform.scale(img,(50,50))
-        LevImagesRes.append(img)
     Toggled=[]
     for i in range(len(LevImagesPlay)):
         Toggled.append(False)
     cou=0
     for j in range(5):
         for i in range(5):
-            toggle=imgbutton(screen,LevImagesPlay[cou],400+50*i,440+51*j,events)
+            toggle=imgbutton(screen,LevImagesPlay[cou],400+51*i,440+51*j,events)
             if toggle == True:
-                Toggled=not Toggled
-                print(Toggled)
+                Toggled[cou]=not Toggled[cou]
             cou+=1
-    cou=0
+    coun=0
     for j in range(5):
         for i in range(5):
-            screen.blit(LevImagesRes[cou],(51*i,440+51*j))
+            screen.blit(LevImageRes[coun].image[LevImageRes[coun].img_count],(51*i,440+51*j))
             cou+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     py.display.flip()
@@ -112,10 +110,10 @@ def main():
     start=imgbutton(screen,startbutt,350,100,events)
     if start == True:
         select=True
-    #txtbx.update()
+    txtbx.update(events)
     #blit txtbx on the sceen
-    #txtbx.set_pos(100,10)
-    #txtbx.draw(screen)
+    txtbx.set_pos(100,10)
+    txtbx.draw(screen)
     while select and levnum == 16:
         for event in py.event.get():
             if event.type == py.QUIT: 
@@ -123,9 +121,24 @@ def main():
                 
         levnum=Selectlevel()
     if levnum != 16:
+        LevImagesTemp=Images()
+        count=0
+        LevFilesLoc="Levels/"+str(levnum)+"/" 
+        LevImageRes=[]
+        for i in range(5):
+            for j in range(5):
+                img=py.image.load(LevFilesLoc +str(count+1) +".jpg")
+                img=py.transform.scale(img,(50,50))                
+                LevImagesTemp.img_count=count
+                LevImagesTemp.image.append(img)
+                LevImagesTemp.x=i*51
+                LevImagesTemp.y=j*51+440
+                print(count)
+                LevImageRes.append(LevImagesTemp)
+                count+=1
         lvnum = True
     while lvnum:
-        gamescreen(levnum)
+        gamescreen(levnum,LevImageRes)
     py.display.flip()
 while running:
     lock.tick(100)
