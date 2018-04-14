@@ -147,3 +147,4 @@ while running:
         if event.type == py.QUIT: 
             running=False
     main()
+#xkcd
