@@ -9,6 +9,7 @@ class Images:
     x=0
     y=0
     img_count=0
+    img_selected=False
 screen_width = 1000
 screen_height = 700
 screen = py.display.set_mode((screen_width,screen_height))
@@ -47,6 +48,7 @@ def imgbutton(screen,img,x,y,events):
         if event.type == py.MOUSEBUTTONUP: 
             if butt.collidepoint((py.mouse.get_pos())):
                 return(True)
+    return(False)
             
 def Selectlevel():
     lock.tick(10)
@@ -66,35 +68,34 @@ def Selectlevel():
     py.display.flip()
     return(16)
     
-def gamescreen(levelnum,LevImageRes):
+def gamescreen(levelnum,LevImageRes,LevImagePlay):
     lock.tick(100)
     events = py.event.get()
     for event in events:
         if event.type == py.QUIT: 
             running=False
     screen.fill((50,50,50))
-    LevFilesLoc="Levels/"+str(levelnum)+"/"
-    zxcvbn=0
-    LevImagesPlay=[]
-    for i in range(25):
-        img=py.image.load(LevFilesLoc +str(i+1) +".jpg")
-        img=py.transform.scale(img,(50,50))
-        LevImagesPlay.append(img)
-    Toggled=[]
-    for i in range(len(LevImagesPlay)):
-        Toggled.append(False)
+    ran=0
+    if ran == 0:
+        prevclicked=0
+        ran=1
     cou=0
     for j in range(5):
         for i in range(5):
-            toggle=imgbutton(screen,LevImagesPlay[cou],400+51*i,440+51*j,events)
-            if toggle == True:
-                Toggled[cou]=not Toggled[cou]
+            if LevImagePlay[cou].img_selected == False:
+                LevImagePlay[cou].img_selected=imgbutton(screen,LevImagePlay[cou].image[LevImagePlay[cou].img_count],LevImagePlay[cou].x,LevImagePlay[cou].y,events)
             cou+=1
     coun=0
+    tog=False
     for j in range(5):
         for i in range(5):
-            screen.blit(LevImageRes[coun].image[LevImageRes[coun].img_count],(51*i,440+51*j))
-            cou+=1
+            if LevImageRes[coun].img_selected == False:
+                tog=imgbutton(screen,LevImageRes[coun].image[LevImageRes[coun].img_count],LevImageRes[coun].x,LevImageRes[coun].y,events)
+            if tog == True:
+                LevImageRes[prevclicked].img_selected = False
+                prevclicked=coun
+                LevImageRes[coun].img_selected = True
+            coun+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     py.display.flip()
 def main():
@@ -121,24 +122,39 @@ def main():
                 
         levnum=Selectlevel()
     if levnum != 16:
-        LevImagesTemp=Images()
         count=0
         LevFilesLoc="Levels/"+str(levnum)+"/" 
         LevImageRes=[]
-        for i in range(5):
-            for j in range(5):
+        for j in range(5):
+            for i in range(5):
+                LevImagesTemp=Images()
                 img=py.image.load(LevFilesLoc +str(count+1) +".jpg")
                 img=py.transform.scale(img,(50,50))                
                 LevImagesTemp.img_count=count
                 LevImagesTemp.image.append(img)
                 LevImagesTemp.x=i*51
                 LevImagesTemp.y=j*51+440
-                print(count)
+                LevImagesTemp.img_selected=False
                 LevImageRes.append(LevImagesTemp)
                 count+=1
+        count=0
+        LevImagesPlay=[]
+        for j in range(5):
+            for i in range(5):
+                LevImagesTemp=Images()
+                img=py.image.load(LevFilesLoc +str(count+1) +".jpg")
+                img=py.transform.scale(img,(50,50))                
+                LevImagesTemp.img_count=count
+                LevImagesTemp.image.append(img)
+                LevImagesTemp.x=i*51+400
+                LevImagesTemp.y=j*51+440
+                LevImagesTemp.img_selected=False
+                LevImagesPlay.append(LevImagesTemp)
+                count+=1
+        
         lvnum = True
     while lvnum:
-        gamescreen(levnum,LevImageRes)
+        gamescreen(levnum,LevImageRes,LevImagesPlay)
     py.display.flip()
 while running:
     lock.tick(100)
@@ -147,4 +163,4 @@ while running:
         if event.type == py.QUIT: 
             running=False
     main()
-#xkc
+#xkcc
