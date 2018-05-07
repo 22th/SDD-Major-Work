@@ -27,8 +27,13 @@ BLUE = (0,0,255)
 GREEN = (0,255,0)
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-ORANGE = (255,180,0)                
-#vars above  
+ORANGE = (255,180,0)    
+prevclickedRes=0
+prevclickedPlay=0
+WhiteBox=py.image.load("gray.jpg")
+WhiteBox=py.transform.scale(WhiteBox,(50,50))
+prevclickedResImg=0
+#vars above
 def screenMsg(screen,x,y,font,text,color):
     xv=font.render(text,1,color)
     screen.blit(xv,(x,y))    
@@ -70,30 +75,37 @@ def Selectlevel():
     
 def gamescreen(levelnum,LevImageRes,LevImagePlay):
     lock.tick(100)
+    global prevclickedResImg
     events = py.event.get()
     for event in events:
         if event.type == py.QUIT: 
             running=False
     screen.fill((50,50,50))
-    ran=0
-    if ran == 0:
-        prevclicked=0
-        ran=1
-    cou=0
+    Playcount=0
+    tog1=False
     for j in range(5):
         for i in range(5):
-            if LevImagePlay[cou].img_selected == False:
-                LevImagePlay[cou].img_selected=imgbutton(screen,LevImagePlay[cou].image[LevImagePlay[cou].img_count],LevImagePlay[cou].x,LevImagePlay[cou].y,events)
-            cou+=1
+            if LevImagePlay[Playcount].img_selected == False:
+                tog1=imgbutton(screen,LevImagePlay[Playcount].image[LevImagePlay[Playcount].img_count],LevImagePlay[Playcount].x,LevImagePlay[Playcount].y,events)
+            elif LevImagePlay[Playcount].img_selected == True:
+                tog1=imgbutton(screen,WhiteBox,LevImagePlay[Playcount].x,LevImagePlay[Playcount].y,events)
+            if tog1 == True:
+                if LevImagePlay[Playcount].img_count == prevclickedResImg:
+                    LevImagePlay[Playcount].img_selected = False
+            Playcount+=1
     coun=0
     tog=False
+    global prevclickedRes
     for j in range(5):
         for i in range(5):
             if LevImageRes[coun].img_selected == False:
                 tog=imgbutton(screen,LevImageRes[coun].image[LevImageRes[coun].img_count],LevImageRes[coun].x,LevImageRes[coun].y,events)
+            if LevImageRes[coun].img_selected == True:
+                screen.blit(WhiteBox,(LevImageRes[coun].x,LevImageRes[coun].y))
             if tog == True:
-                LevImageRes[prevclicked].img_selected = False
-                prevclicked=coun
+                LevImageRes[prevclickedRes].img_selected = False
+                prevclickedRes=coun
+                prevclickedResImg=LevImageRes[coun].img_count
                 LevImageRes[coun].img_selected = True
             coun+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
@@ -122,6 +134,10 @@ def main():
                 
         levnum=Selectlevel()
     if levnum != 16:
+        imcount=[]
+        for g in range(25):
+            imcount.append(g)
+        rand.shuffle(imcount)
         count=0
         LevFilesLoc="Levels/"+str(levnum)+"/" 
         LevImageRes=[]
@@ -130,7 +146,7 @@ def main():
                 LevImagesTemp=Images()
                 img=py.image.load(LevFilesLoc +str(count+1) +".jpg")
                 img=py.transform.scale(img,(50,50))                
-                LevImagesTemp.img_count=count
+                LevImagesTemp.img_count=imcount[count]
                 LevImagesTemp.image.append(img)
                 LevImagesTemp.x=i*51
                 LevImagesTemp.y=j*51+440
@@ -148,7 +164,7 @@ def main():
                 LevImagesTemp.image.append(img)
                 LevImagesTemp.x=i*51+400
                 LevImagesTemp.y=j*51+440
-                LevImagesTemp.img_selected=False
+                LevImagesTemp.img_selected=True
                 LevImagesPlay.append(LevImagesTemp)
                 count+=1
         
@@ -163,4 +179,5 @@ while running:
         if event.type == py.QUIT: 
             running=False
     main()
+print(locals())
 #xkcc
