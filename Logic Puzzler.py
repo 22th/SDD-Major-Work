@@ -1,6 +1,5 @@
 import pygame as py
 import random as rand
-import gates
 import eztext
 py.init()
 #vars below
@@ -10,6 +9,7 @@ class Images:
     y=0
     img_count=0
     img_selected=False
+    correct=False
 screen_width = 1000
 screen_height = 700
 screen = py.display.set_mode((screen_width,screen_height))
@@ -30,9 +30,12 @@ WHITE = (255,255,255)
 ORANGE = (255,180,0)    
 prevclickedRes=0
 prevclickedPlay=0
-WhiteBox=py.image.load("gray.jpg")
-WhiteBox=py.transform.scale(WhiteBox,(50,50))
+GreyBox=py.image.load("gray.jpg")
+GreyBox=py.transform.scale(GreyBox,(50,50))
 prevclickedResImg=0
+Correctspot=[]
+for i in range(25):
+    Correctspot.append(False)
 #vars above
 def screenMsg(screen,x,y,font,text,color):
     xv=font.render(text,1,color)
@@ -76,6 +79,8 @@ def Selectlevel():
 def gamescreen(levelnum,LevImageRes,LevImagePlay):
     lock.tick(100)
     global prevclickedResImg
+    global prevclickedRes
+    global Correctspot
     events = py.event.get()
     for event in events:
         if event.type == py.QUIT: 
@@ -87,21 +92,21 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
         for i in range(5):
             if LevImagePlay[Playcount].img_selected == False:
                 tog1=imgbutton(screen,LevImagePlay[Playcount].image[LevImagePlay[Playcount].img_count],LevImagePlay[Playcount].x,LevImagePlay[Playcount].y,events)
-            elif LevImagePlay[Playcount].img_selected == True:
-                tog1=imgbutton(screen,WhiteBox,LevImagePlay[Playcount].x,LevImagePlay[Playcount].y,events)
+            if LevImagePlay[Playcount].img_selected == True:
+                tog1=imgbutton(screen,GreyBox,LevImagePlay[Playcount].x,LevImagePlay[Playcount].y,events)
             if tog1 == True:
                 if LevImagePlay[Playcount].img_count == prevclickedResImg:
                     LevImagePlay[Playcount].img_selected = False
+                    LevImageRes[prevclickedRes].correct=True
             Playcount+=1
     coun=0
     tog=False
-    global prevclickedRes
     for j in range(5):
         for i in range(5):
             if LevImageRes[coun].img_selected == False:
                 tog=imgbutton(screen,LevImageRes[coun].image[LevImageRes[coun].img_count],LevImageRes[coun].x,LevImageRes[coun].y,events)
-            if LevImageRes[coun].img_selected == True:
-                screen.blit(WhiteBox,(LevImageRes[coun].x,LevImageRes[coun].y))
+            if LevImageRes[coun].img_selected == True or LevImageRes[coun].correct==True:
+                screen.blit(GreyBox,(LevImageRes[coun].x,LevImageRes[coun].y))
             if tog == True:
                 LevImageRes[prevclickedRes].img_selected = False
                 prevclickedRes=coun
@@ -165,9 +170,9 @@ def main():
                 LevImagesTemp.x=i*51+400
                 LevImagesTemp.y=j*51+440
                 LevImagesTemp.img_selected=True
+                LevImagesTemp.correct=False
                 LevImagesPlay.append(LevImagesTemp)
                 count+=1
-        
         lvnum = True
     while lvnum:
         gamescreen(levnum,LevImageRes,LevImagesPlay)
