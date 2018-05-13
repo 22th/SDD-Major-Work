@@ -1,6 +1,7 @@
 import pygame as py
 import random as rand
 import eztext
+import PyIgnition
 py.init()
 #vars below
 class Images:
