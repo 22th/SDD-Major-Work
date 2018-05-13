@@ -140,8 +140,8 @@ def main():
         levnum=Selectlevel()
     if levnum != 16:
         imcount=[]
-        for g in range(25):
-            imcount.append(g)
+        for i in range(25):
+            imcount.append(i)
         rand.shuffle(imcount)
         count=0
         LevFilesLoc="Levels/"+str(levnum)+"/" 
