@@ -58,8 +58,7 @@ def imgbutton(screen,img,x,y,events):
         if event.type == py.MOUSEBUTTONUP: 
             if butt.collidepoint((py.mouse.get_pos())):
                 return(True)
-    return(False)
-            
+    return(False)            
 def Selectlevel():
     lock.tick(10)
     events=py.event.get()
