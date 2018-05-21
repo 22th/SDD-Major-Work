@@ -1,7 +1,6 @@
 import pygame as py
 import random as rand
 import eztext
-import PyIgnition
 py.init()
 #vars below
 class Images:
@@ -40,7 +39,8 @@ for i in range(25):
     Correctspot.append(False)
 #vars above
 def screenMsg(screen,x,y,font,text,color):
-    xv=font.render(str(text),1,color)
+    text=str(text)
+    xv=font.render(text,1,color)
     screen.blit(xv,(x,y))    
 def rectbutton(screen,x,y,w,h,color,events,text,font,fcolor):
     xv=font.render(text,1,fcolor)
@@ -131,7 +131,7 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
             return(score)   
         prevclickedRes=26
     return(-100000000000)
-def scorescreen(score):
+def scorescreen(score,scorel):
     lock.tick(10)
     events=py.event.get()
     for event in events:
@@ -139,6 +139,10 @@ def scorescreen(score):
             running=False
             py.display.quit()
     screen.fill((50,50,50))
+    i=0
+    while i != 5:
+        screenMsg(screen,100,100*i,yfont,scorel[i],RED)
+        i=i+1
     py.display.flip()
 def main():
     events=py.event.get()
@@ -204,14 +208,14 @@ def main():
         lvnum = True
     while lvnum:
         gs=gamescreen(levnum,LevImageRes,LevImagesPlay)
-        print("okay")
         if gs != -100000000000:
             lvnum=False
             gsgo=True
-            print("good")
+            scorel=[]
+            for i in open("Scores.txt","r"):
+                scorel.append(i.strip())
     while gsgo:
-        scorescreen(gs)
-        print("better")
+        scorescreen(gs,scorel)
     py.display.flip()
 while running:
     lock.tick(100)
