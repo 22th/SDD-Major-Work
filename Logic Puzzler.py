@@ -35,11 +35,12 @@ GreyBox=py.image.load("gray.jpg")
 GreyBox=py.transform.scale(GreyBox,(50,50))
 prevclickedResImg=0
 Correctspot=[]
+score=0
 for i in range(25):
     Correctspot.append(False)
 #vars above
 def screenMsg(screen,x,y,font,text,color):
-    xv=font.render(text,1,color)
+    xv=font.render(str(text),1,color)
     screen.blit(xv,(x,y))    
 def rectbutton(screen,x,y,w,h,color,events,text,font,fcolor):
     xv=font.render(text,1,fcolor)
@@ -82,6 +83,7 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
     global prevclickedResImg
     global prevclickedRes
     global Correctspot
+    global score
     events = py.event.get()
     for event in events:
         if event.type == py.QUIT: 
@@ -99,6 +101,10 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
                 if LevImagePlay[Playcount].img_count == prevclickedResImg:
                     LevImagePlay[Playcount].img_selected = False
                     LevImageRes[prevclickedRes].correct=True
+                    Correctspot[prevclickedRes]=True
+                    score=score+10
+                else:
+                    score=score-10
             Playcount+=1
     coun=0
     tog=False
@@ -115,6 +121,24 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
                 LevImageRes[coun].img_selected = True
             coun+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
+    Scoremsg="Score: "+str(score)
+    Scoremsg=str(Scoremsg)
+    scomsg=myfont.render(Scoremsg,1,BLACK)
+    screen.blit(scomsg,(100,100))
+    py.display.flip()
+    if all(Correctspot):
+        if prevclickedRes== 26:
+            return(score)   
+        prevclickedRes=26
+    return(-100000000000)
+def scorescreen(score):
+    lock.tick(10)
+    events=py.event.get()
+    for event in events:
+        if event.type == py.QUIT: 
+            running=False
+            py.display.quit()
+    screen.fill((50,50,50))
     py.display.flip()
 def main():
     events=py.event.get()
@@ -125,6 +149,9 @@ def main():
     select=False
     lvnum=False
     levnum=16
+    gs=False
+    gsnum=-100000000000
+    gsgo=False
     screen.fill((50,50,50))
     start=imgbutton(screen,startbutt,350,100,events)
     if start == True:
@@ -176,7 +203,15 @@ def main():
                 count+=1
         lvnum = True
     while lvnum:
-        gamescreen(levnum,LevImageRes,LevImagesPlay)
+        gs=gamescreen(levnum,LevImageRes,LevImagesPlay)
+        print("okay")
+        if gs != -100000000000:
+            lvnum=False
+            gsgo=True
+            print("good")
+    while gsgo:
+        scorescreen(gs)
+        print("better")
     py.display.flip()
 while running:
     lock.tick(100)
