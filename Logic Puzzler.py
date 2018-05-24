@@ -180,7 +180,7 @@ def main():
         for j in range(5):
             for i in range(5):
                 LevImagesTemp=Images()
-                img=py.image.load(LevFilesLoc +str(count+1) +".jpg")
+                img=py.image.load(LevFilesLoc +str(count+1) +".jpg").convert_alpha()
                 img=py.transform.scale(img,(50,50))                
                 LevImagesTemp.img_count=imcount[count]
                 LevImagesTemp.image.append(img)
@@ -194,7 +194,7 @@ def main():
         for j in range(5):
             for i in range(5):
                 LevImagesTemp=Images()
-                img=py.image.load(LevFilesLoc +str(count+1) +".jpg")
+                img=py.image.load(LevFilesLoc +str(count+1) +".jpg").convert_alpha()
                 img=py.transform.scale(img,(50,50))                
                 LevImagesTemp.img_count=count
                 LevImagesTemp.image.append(img)
