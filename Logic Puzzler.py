@@ -223,5 +223,5 @@ while running:
         if event.type == py.QUIT: 
             running=False
     main()
-print(locals())
+
 #xkcc
