@@ -1,6 +1,7 @@
 import pygame as py
 import random as rand
 import eztext
+import csv
 py.init()
 #vars below
 class Images:
@@ -35,6 +36,7 @@ GreyBox=py.transform.scale(GreyBox,(50,50))
 prevclickedResImg=0
 Correctspot=[]
 score=0
+name=""
 for i in range(25):
     Correctspot.append(False)
 #vars above
@@ -122,11 +124,11 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     Scoremsg="Score: "+str(score)
     Scoremsg=str(Scoremsg)
-    scomsg=myfont.render(Scoremsg,1,BLACK)
+    scomsg=myfont.render(Scoremsg,1,RED)
     screen.blit(scomsg,(100,100))
     py.display.flip()
     if all(Correctspot):
-        if prevclickedRes== 26:
+        if prevclickedRes == 26:
             return(score)   
         prevclickedRes=26
     return(-100000000000)
@@ -144,6 +146,7 @@ def scorescreen(score,scorel):
         i=i+1
     py.display.flip()
 def main():
+    global name
     events=py.event.get()
     for event in events:
         if event.type == py.QUIT: 
@@ -163,6 +166,7 @@ def main():
     #blit txtbx on the sceen
     txtbx.set_pos(100,10)
     txtbx.draw(screen)
+    name=txtbx.value
     while select and levnum == 16:
         for event in py.event.get():
             if event.type == py.QUIT: 
@@ -211,8 +215,30 @@ def main():
             lvnum=False
             gsgo=True
             scorel=[]
-            for i in open("Scores.txt","r"):
-                scorel.append(i.strip())
+            csvf=open("Scores.csv","r")
+            reader=csv.reader(csvf)
+            rownum=0
+            for row in reader:
+                if rownum == 0:
+                    header=row
+                else:
+                    colnum=0
+                    for col in row:
+                        print(header[colnum]+col)
+                        colnum+=1
+                rownum+=1
+            csvf.close
+            #for i in open("Scores.txt","r"):
+                #scorel.append(i.strip())
+            #scorel.append(gs)
+            #scorel.sort()
+            #with open("Scores.txt","r") as f:
+                #t=f.read()
+                #xcv=0
+                #while xcv != 5:
+                    #f.write(str(scorel[xcv])+"\n")
+                    #xcv=+1
+                #f.truncate()
     while gsgo:
         scorescreen(gs,scorel)
     py.display.flip()
