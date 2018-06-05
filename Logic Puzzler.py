@@ -11,6 +11,8 @@ class Images:
     img_count=0
     img_selected=False
     correct=False
+class Scores:
+    NS=[]
 screen_width = 1000
 screen_height = 700
 screen = py.display.set_mode((screen_width,screen_height))
@@ -142,7 +144,9 @@ def scorescreen(score,scorel):
     screen.fill((50,50,50))
     i=0
     while i != 5:
-        screenMsg(screen,100,100*i,yfont,scorel[i],RED)
+        screenMsg(screen,100,100*i,yfont,scorel[i].NS[i],RED)
+        screenMsg(screen,200,100*i,yfont,scorel[i].NS[i+1],RED)
+        #print(i)
         i=i+1
     py.display.flip()
 def main():
@@ -215,30 +219,19 @@ def main():
             lvnum=False
             gsgo=True
             scorel=[]
-            csvf=open("Scores.csv","r")
-            reader=csv.reader(csvf)
-            rownum=0
-            for row in reader:
-                if rownum == 0:
-                    header=row
-                else:
-                    colnum=0
-                    for col in row:
-                        print(header[colnum]+col)
-                        colnum+=1
-                rownum+=1
-            csvf.close
-            #for i in open("Scores.txt","r"):
-                #scorel.append(i.strip())
-            #scorel.append(gs)
-            #scorel.sort()
-            #with open("Scores.txt","r") as f:
-                #t=f.read()
-                #xcv=0
-                #while xcv != 5:
-                    #f.write(str(scorel[xcv])+"\n")
-                    #xcv=+1
-                #f.truncate()
+            with open("Scores.csv") as f:
+                reader = csv.reader(f)
+                for row in reader:
+                    scoreltemp=Scores()
+                    scoreltemp.NS.append(row)
+                    print(row)
+                    #scoreltemp.NS.append(row[1])
+                    scorel.append(scoreltemp)
+                    print(scoreltemp.NS[0])
+                    #print(scoreltemp.NS[1])
+            print("test")
+            print(scorel[1].NS[0])
+            #print(scorel[1].NS[1])
     while gsgo:
         scorescreen(gs,scorel)
     py.display.flip()
