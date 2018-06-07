@@ -39,6 +39,7 @@ prevclickedResImg=0
 Correctspot=[]
 score=0
 name=""
+errorcount=[0,False]
 for i in range(25):
     Correctspot.append(False)
 #vars above
@@ -141,6 +142,7 @@ def scorescreen(score,data):
         if event.type == py.QUIT: 
             running=False
             py.display.quit()
+    Scorerank=['5th ','4th ','3rd ','2nd ','1st ']
     screen.fill((50,50,50))
     i=5
     xcb=0
@@ -154,26 +156,33 @@ def scorescreen(score,data):
     py.display.flip()
 def main():
     global name
+    global errorcount
     events=py.event.get()
     for event in events:
         if event.type == py.QUIT: 
             running=False
-    
+    screen.fill((50,50,50))
     select=False
     lvnum=False
     levnum=16
     gs=False
     gsnum=-100000000000
     gsgo=False
-    screen.fill((50,50,50))
-    start=imgbutton(screen,startbutt,350,100,events)
-    if start == True:
-        select=True
     txtbx.update(events)
     #blit txtbx on the sceen
     txtbx.set_pos(100,10)
     txtbx.draw(screen)
     name=txtbx.value
+    start=imgbutton(screen,startbutt,350,100,events)
+    if start == True and name !='':
+        select=True
+    if start == True or errorcount[1]==True and name == '' and errorcount[0] !=100:
+        errorcount[1]=True
+        screenMsg(screen,screen_width/2,screen_height/2,yfont,"INPUT A NAME",ORANGE)
+    if errorcount[0] == 10 and errorcount[1] == True:
+        errorcount[0]=0
+        errorcount[1]=False
+        
     while select and levnum == 16:
         for event in py.event.get():
             if event.type == py.QUIT: 
@@ -222,13 +231,15 @@ def main():
             lvnum=False
             gsgo=True
             dt=[('score',int), ('name', 'S10')]
-            data = np.genfromtxt('Scores.csv', delimiter=',', dtype=None, names=('Scores','Name'))
+            data = np.genfromtxt('Scores.csv', delimiter=',', dtype=None, names=('Scores','Name'),encoding=None)
             newrow=(gs,name)
-            data.sort(order='Scores')
+            checker=0
             for i in range(5):
                 temp=data[i]
-                if newrow[0] > temp[0]:
+                if newrow[0] > temp[0] and checker == 0:
                     data[i]=newrow
+                    checker+=1
+            data.sort(order='Scores')
             np.savetxt("Scores.csv",data,fmt=('%i, %s'),delimiter=",")
     while gsgo:
         scorescreen(gs,data)
