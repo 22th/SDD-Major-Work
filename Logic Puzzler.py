@@ -1,7 +1,7 @@
 import pygame as py
 import random as rand
 import eztext
-import numpy
+import numpy as np
 py.init()
 #vars below
 class Images:
@@ -134,7 +134,7 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
             return(score)   
         prevclickedRes=26
     return(-100000000000)
-def scorescreen(score,scorel):
+def scorescreen(score,data):
     lock.tick(10)
     events=py.event.get()
     for event in events:
@@ -142,14 +142,15 @@ def scorescreen(score,scorel):
             running=False
             py.display.quit()
     screen.fill((50,50,50))
-    i=0
+    i=5
     xcb=0
-    while i != 5:
-        screenMsg(screen,100,100+100*i,yfont,scorel[i].NS[0],RED)
-        screenMsg(screen,200,100+100*i,yfont,scorel[i].NS[1],RED)
+    while i != 0:
+        temp=data[i-1]
+        screenMsg(screen,100,350-50*i,yfont,temp[0],RED)
+        screenMsg(screen,200,350-50*i,yfont,temp[1],RED)
         #print(i)
         xcb=xcb+2
-        i=i+1
+        i=i-1
     py.display.flip()
 def main():
     global name
@@ -220,7 +221,15 @@ def main():
         if gs != -100000000000:
             lvnum=False
             gsgo=True
-            data = numpy.loadtxt('Scores.csv',dtype='str', delimiter=',', unpack=True)
+            dt=[('score',int), ('name', 'S10')]
+            data = np.genfromtxt('Scores.csv', delimiter=',', dtype=None, names=('Scores','Name'))
+            newrow=(gs,name)
+            data.sort(order='Scores')
+            for i in range(5):
+                temp=data[i]
+                if newrow[0] > temp[0]:
+                    data[i]=newrow
+            np.savetxt("Scores.csv",data,fmt=('%i, %s'),delimiter=",")
     while gsgo:
         scorescreen(gs,data)
     py.display.flip()
