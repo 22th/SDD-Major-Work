@@ -1,7 +1,7 @@
 import pygame as py
 import random as rand
 import eztext
-import csv
+import numpy
 py.init()
 #vars below
 class Images:
@@ -143,10 +143,12 @@ def scorescreen(score,scorel):
             py.display.quit()
     screen.fill((50,50,50))
     i=0
+    xcb=0
     while i != 5:
-        screenMsg(screen,100,100*i,yfont,scorel[i].NS[i],RED)
-        screenMsg(screen,200,100*i,yfont,scorel[i].NS[i+1],RED)
+        screenMsg(screen,100,100+100*i,yfont,scorel[i].NS[0],RED)
+        screenMsg(screen,200,100+100*i,yfont,scorel[i].NS[1],RED)
         #print(i)
+        xcb=xcb+2
         i=i+1
     py.display.flip()
 def main():
@@ -218,22 +220,9 @@ def main():
         if gs != -100000000000:
             lvnum=False
             gsgo=True
-            scorel=[]
-            with open("Scores.csv") as f:
-                reader = csv.reader(f)
-                for row in reader:
-                    scoreltemp=Scores()
-                    scoreltemp.NS.append(row)
-                    print(row)
-                    #scoreltemp.NS.append(row[1])
-                    scorel.append(scoreltemp)
-                    print(scoreltemp.NS[0])
-                    #print(scoreltemp.NS[1])
-            print("test")
-            print(scorel[1].NS[0])
-            #print(scorel[1].NS[1])
+            data = numpy.loadtxt('Scores.csv',dtype='str', delimiter=',', unpack=True)
     while gsgo:
-        scorescreen(gs,scorel)
+        scorescreen(gs,data)
     py.display.flip()
 while running:
     lock.tick(100)
