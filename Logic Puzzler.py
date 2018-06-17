@@ -39,7 +39,7 @@ prevclickedResImg=0
 Correctspot=[]
 score=0
 name=""
-errorcount=[0,False]
+errorcount=[0,False,screen_width/2,0]
 for i in range(25):
     Correctspot.append(False)
 #vars above
@@ -178,16 +178,15 @@ def main():
         select=True
     if start == True or errorcount[1]==True and name == '' and errorcount[0] !=100:
         errorcount[1]=True
-        screenMsg(screen,screen_width/2,screen_height/2,yfont,"INPUT A NAME",ORANGE)
-    if errorcount[0] == 10 and errorcount[1] == True:
+        screenMsg(screen,errorcount[2],screen_height/2,yfont,"INPUT A NAME",ORANGE)
+        errorcount[0]+=1
+    if errorcount[0] == 1000 and errorcount[1] == True:
         errorcount[0]=0
         errorcount[1]=False
-        
     while select and levnum == 16:
         for event in py.event.get():
             if event.type == py.QUIT: 
-                running=False
-                
+                running=False     
         levnum=Selectlevel()
     if levnum != 16:
         imcount=[]
