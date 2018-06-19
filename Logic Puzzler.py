@@ -20,7 +20,7 @@ lock = py.time.Clock()
 myfont = py.font.SysFont("Comic Sans MS",11)
 yfont = py.font.SysFont("Comic Sans MS",20)
 running=True 
-txtbx = eztext.Input(maxlength=45, color=(255,255,255), prompt='Name: ')
+txtbx = eztext.Input(maxlength=10, color=(255,255,255), prompt='Name: ')
 startbutt=py.image.load("startbutton.png")
 start=0
 SL=0
@@ -130,6 +130,7 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
     scomsg=myfont.render(Scoremsg,1,RED)
     screen.blit(scomsg,(100,100))
     py.display.flip()
+    score-=0.01
     if all(Correctspot):
         if prevclickedRes == 26:
             return(score)   
@@ -229,7 +230,6 @@ def main():
         if gs != -100000000000:
             lvnum=False
             gsgo=True
-            dt=[('score',int), ('name', 'S10')]
             data = np.genfromtxt('Scores.csv', delimiter=',', dtype=None, names=('Scores','Name'),encoding=None)
             newrow=(gs,name)
             checker=0
