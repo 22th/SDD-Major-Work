@@ -22,7 +22,6 @@ yfont = py.font.SysFont("Comic Sans MS",20)
 running=True 
 txtbx = eztext.Input(maxlength=10, color=(255,255,255), prompt='Name: ')
 startbutt=py.image.load("startbutton.png")
-start=0
 SL=0
 py.display.set_caption("Logic Puzzler")
 RED = (255,0,0)
@@ -39,7 +38,7 @@ prevclickedResImg=0
 Correctspot=[]
 score=0
 name=""
-errorcount=[0,False,screen_width/2,0]
+errorcount=[0,False]
 for i in range(25):
     Correctspot.append(False)
 #vars above
@@ -50,11 +49,11 @@ def screenMsg(screen,x,y,font,text,color):
 def rectbutton(screen,x,y,w,h,color,events,text,font,fcolor):
     xv=font.render(text,1,fcolor)
     py.draw.rect(screen,color,(x,y,w,h))
-    name=py.Rect(x,y,w,h)
+    rect=py.Rect(x,y,w,h)
     screen.blit(xv,(x+w/2-py.Surface.get_width(xv)/2,y+h/2-py.Surface.get_height(xv)/2))    
     for evet in events:
         if evet.type == py.MOUSEBUTTONUP:
-            if name.collidepoint((py.mouse.get_pos())):
+            if rect.collidepoint((py.mouse.get_pos())):
                 return(True)   
 def imgbutton(screen,img,x,y,events):
     screen.blit(img,(x,y))
@@ -143,16 +142,13 @@ def scorescreen(score,data):
         if event.type == py.QUIT: 
             running=False
             py.display.quit()
-    Scorerank=['5th ','4th ','3rd ','2nd ','1st ']
+    Scorerank=['5th: ','4th: ','3rd: ','2nd: ','1st: ']
     screen.fill((50,50,50))
     i=5
-    xcb=0
     while i != 0:
         temp=data[i-1]
-        screenMsg(screen,100,350-50*i,yfont,temp[0],RED)
+        screenMsg(screen,100,350-50*i,yfont,Scorerank[i-1]+str(temp[0]),RED)
         screenMsg(screen,200,350-50*i,yfont,temp[1],RED)
-        #print(i)
-        xcb=xcb+2
         i=i-1
     py.display.flip()
 def main():
@@ -179,7 +175,7 @@ def main():
         select=True
     if start == True or errorcount[1]==True and name == '' and errorcount[0] !=100:
         errorcount[1]=True
-        screenMsg(screen,errorcount[2],screen_height/2,yfont,"INPUT A NAME",ORANGE)
+        screenMsg(screen,screen_width/2,screen_height/2,yfont,"INPUT A NAME",ORANGE)
         errorcount[0]+=1
     if errorcount[0] == 1000 and errorcount[1] == True:
         errorcount[0]=0
