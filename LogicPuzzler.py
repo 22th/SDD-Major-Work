@@ -123,6 +123,11 @@ def gamescreen(levelnum,LevImageRes,LevImagePlay):
                 prevclickedResImg=LevImageRes[coun].img_count
                 LevImageRes[coun].img_selected = True
             coun+=1
+    count=0
+    for j in range(5):
+        for i in range(5):
+            screen.blit(LevImagePlay[count].image[LevImagePlay[count].img_count],(LevImageRes[count].x+10,LevImageRes[count].y-300))
+            count+=1
     screenMsg(screen,400,100,yfont,"LOGIC PUZZLER",ORANGE)
     Scoremsg="Score: "+str(score)
     Scoremsg=str(Scoremsg)
